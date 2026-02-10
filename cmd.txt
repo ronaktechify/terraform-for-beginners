@@ -1,0 +1,44 @@
+# Step 1: Initialize Terraform project
+# This command:
+# - Downloads required providers (AWS)
+# - Initializes the backend
+# - Prepares Terraform to work in this directory
+terraform init
+
+
+# Step 2: Validate Terraform configuration
+# This command:
+# - Checks Terraform files for syntax errors
+# - Ensures variables and resources are correctly defined
+# - Does NOT contact AWS
+# - Does NOT create any resources
+terraform validate
+
+
+# Step 3: Preview infrastructure changes
+# This command:
+# - Shows what Terraform WILL create, change, or delete
+# - Safe command (read-only)
+terraform plan
+
+
+# Step 4: Create infrastructure
+# This command:
+# - Creates real cloud resources
+# - Asks for confirmation before applying
+terraform apply
+
+
+# Apply without confirmation (used in automation / CI-CD)
+terraform apply --auto-approve
+
+
+# Step 5: Destroy infrastructure
+# This command:
+# - Deletes ALL resources created by Terraform
+# - Prevents unnecessary cloud cost
+terraform destroy
+
+
+# Destroy without confirmation
+terraform destroy --auto-approve
