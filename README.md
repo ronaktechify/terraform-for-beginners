@@ -115,9 +115,3 @@ Or manually remove problematic resources in the provider console and then run `t
 
 - Official Terraform docs: https://www.terraform.io/docs
 - Remote state and backends: https://www.terraform.io/language/state/backends
-
----
-
-If you'd like, I can also:
-- Add example values to `terraform.tfvars` for a ready-to-run demo.
-- Create a short `README-exercises.md` with step-by-step solutions.
