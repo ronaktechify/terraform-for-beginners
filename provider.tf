@@ -24,6 +24,6 @@ terraform {
 provider "aws" {
 
   # Region where all AWS resources will be created
-  # Example: us-east-1 (N. Virginia)
-  region = "us-east-1"
+  # Example: ap-south-1 (Mumbai)
+  region = "ap-south-1"
 }
