@@ -6,7 +6,7 @@ resource "aws_instance" "example" {
   # AMI (Amazon Machine Image) defines the operating system of the server
   # This AMI ID is region-specific (for example: ap-south-1)
   # Think of it as: Ubuntu / Amazon Linux / RedHat image
-  ami = "ami-0b6c6ebed2801a5cb"
+  ami = "ami-019715e0d74f695be"
 
   # Instance type defines the size of the server
   # Instead of hardcoding, we are using a variable
@@ -18,6 +18,6 @@ resource "aws_instance" "example" {
   tags = {
 
     # Name tag helps us easily recognize the EC2 instance in AWS Console
-    Name = "HelloWorld"
+    Name = "My-Instance"
   }
 }
