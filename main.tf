@@ -1,23 +1,62 @@
-# This block tells Terraform that we want to create a resource
-# "aws_instance" means an EC2 instance in AWS
-# "example" is a local name used by Terraform to identify this resource
+#############################################################
+# Generate SSH Private & Public Key for Developer Access
+# Terraform will create RSA 4096 bit secure key
+#############################################################
+resource "tls_private_key" "dev_key" {
+
+  # Encryption algorithm used for SSH key
+  algorithm = "RSA"
+
+  # Key length (4096 is highly secure)
+  rsa_bits  = 4096
+}
+
+#############################################################
+# Upload Public Key to AWS as EC2 Key Pair
+# This will allow EC2 to trust the generated key
+#############################################################
+resource "aws_key_pair" "generated_key" {
+
+  # Name of key pair in AWS Console
+  key_name   = "developer-key"
+
+  # Public key generated from tls_private_key
+  public_key = tls_private_key.dev_key.public_key_openssh
+}
+
+#############################################################
+# Save Private Key Locally as PEM File
+# This PEM file will be shared with developer for SSH login
+#############################################################
+resource "local_file" "pem_file" {
+
+  # Name of the generated PEM file
+  filename = "developer-key.pem"
+
+  # Private key content in PEM format
+  content  = tls_private_key.dev_key.private_key_pem
+
+  # Required permission for SSH login
+  file_permission = "0400"
+}
+
+#############################################################
+# Create EC2 Instance
+# Attach Generated Key Pair to EC2
+#############################################################
 resource "aws_instance" "example" {
 
-  # AMI (Amazon Machine Image) defines the operating system of the server
-  # This AMI ID is region-specific (for example: ap-south-1)
-  # Think of it as: Ubuntu / Amazon Linux / RedHat image
+  # AMI defines OS (Amazon Linux / Ubuntu etc.)
   ami = "ami-019715e0d74f695be"
 
-  # Instance type defines the size of the server
-  # Instead of hardcoding, we are using a variable
-  # The actual value is taken from terraform.tfvars
+  # Instance type from terraform.tfvars
   instance_type = var.instance_type
 
-  # Tags are key-value pairs used to identify and manage resources
-  # Very useful in real projects for billing, ownership, and environment tracking
-  tags = {
+  # Attach Developer Key Pair to EC2
+  key_name = aws_key_pair.generated_key.key_name
 
-    # Name tag helps us easily recognize the EC2 instance in AWS Console
-    Name = "My-Instance"
+  # Tags for identification
+  tags = {
+    Name = "Techify-Instance"
   }
 }
