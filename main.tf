@@ -41,6 +41,36 @@ resource "local_file" "pem_file" {
 }
 
 #############################################################
+# Security Group to Allow SSH Access (Port 22)
+#############################################################
+resource "aws_security_group" "ssh_access" {
+
+  name        = "allow-ssh"
+  description = "Allow SSH inbound traffic"
+
+  # Allow SSH from anywhere
+  ingress {
+    description = "SSH from anywhere"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Allow all outbound traffic
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "allow-ssh-sg"
+  }
+}
+
+#############################################################
 # Create EC2 Instance
 # Attach Generated Key Pair to EC2
 #############################################################
@@ -54,6 +84,9 @@ resource "aws_instance" "example" {
 
   # Attach Developer Key Pair to EC2
   key_name = aws_key_pair.generated_key.key_name
+
+  # Attach Security Group
+  vpc_security_group_ids = [aws_security_group.ssh_access.id]
 
   # Tags for identification
   tags = {
